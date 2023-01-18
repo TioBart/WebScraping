@@ -1,0 +1,79 @@
+<html>
+<head>
+<title>main.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6a8759;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+main.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">selenium </span><span class="s0">import </span><span class="s1">webdriver</span>
+<span class="s0">from </span><span class="s1">webdriver_manager.chrome </span><span class="s0">import </span><span class="s1">ChromeDriverManager</span>
+<span class="s0">from </span><span class="s1">selenium.webdriver.chrome.service </span><span class="s0">import </span><span class="s1">Service</span>
+<span class="s0">import </span><span class="s1">getpass4</span>
+<span class="s0">from </span><span class="s1">easygui </span><span class="s0">import </span><span class="s1">passwordbox</span>
+<span class="s0">import </span><span class="s1">requests</span>
+<span class="s0">from </span><span class="s1">bs4 </span><span class="s0">import </span><span class="s1">BeautifulSoup</span>
+
+<span class="s2"># Configurações</span>
+<span class="s1">options = webdriver.ChromeOptions()</span>
+<span class="s1">options.add_experimental_option(</span><span class="s3">&quot;detach&quot;</span><span class="s0">, True</span><span class="s1">)</span>
+<span class="s1">driver_service = Service(executable_path=ChromeDriverManager().install())</span>
+
+<span class="s2"># BNAMERICAS#</span>
+
+<span class="s2"># Credenciais</span>
+<span class="s1">Email = input(</span><span class="s3">'Enter your Email (BNAMERICAS Access): '</span><span class="s1">)</span>
+<span class="s1">Senha = passwordbox(</span><span class="s3">'Enter your password (BNAMERICAS Access)'</span><span class="s1">)</span>
+<span class="s2"># Senha = getpass4.getpass(&quot;Insira sua senha: &quot;)</span>
+
+<span class="s2"># Acesso</span>
+<span class="s1">driver = webdriver.Chrome(options=options</span><span class="s0">, </span><span class="s1">service=driver_service)</span>
+<span class="s1">driver.get(</span><span class="s3">&quot;https://app.bnamericas.com/article/section/all&quot;</span><span class="s1">)</span>
+
+<span class="s2"># Comandos</span>
+<span class="s1">driver.find_element(</span><span class="s3">'xpath'</span><span class="s0">, </span><span class="s3">'//*[@id=&quot;email&quot;]'</span><span class="s1">).send_keys(Email)</span>
+<span class="s1">driver.find_element(</span><span class="s3">'xpath'</span><span class="s0">, </span><span class="s3">'//*[@id=&quot;password&quot;]'</span><span class="s1">).send_keys(Senha)</span>
+<span class="s1">driver.find_element(</span><span class="s3">'xpath'</span><span class="s0">, </span><span class="s3">'//*[@id=&quot;login&quot;]/div/div[1]/div/div[1]/form/div[2]/div[2]/button'</span><span class="s1">).click()</span>
+
+<span class="s2"># HTML</span>
+<span class="s2"># 'd-block' ; li class</span>
+
+<span class="s0">import </span><span class="s1">time</span>
+<span class="s1">time.sleep(</span><span class="s4">5</span><span class="s1">)</span>
+
+<span class="s2">#Dowloand_HTML = input('dowloand HTML? (Y or N): ')</span>
+<span class="s1">html = driver.page_source</span>
+
+<span class="s2">#if Dowloand_HTML == &quot;Y&quot;:</span>
+
+<span class="s1">BNA = BeautifulSoup(html</span><span class="s0">, </span><span class="s3">'html.parser'</span><span class="s1">)</span>
+<span class="s2"># print(BNA)</span>
+<span class="s2"># print(type(BNA))</span>
+<span class="s2"># HTML BNA</span>
+<span class="s1">lis = BNA.find_all(</span><span class="s3">'li'</span><span class="s0">, </span><span class="s1">attrs={</span><span class="s3">'class'</span><span class="s1">: </span><span class="s3">'pb-4 mb-2 pr-4 pl-3 mr-4 ng-scope'</span><span class="s1">})</span>
+<span class="s0">for </span><span class="s1">li </span><span class="s0">in </span><span class="s1">lis:</span>
+    <span class="s2"># titulo</span>
+    <span class="s1">tituloBNA = li.find(</span><span class="s3">'a'</span><span class="s0">, </span><span class="s1">attrs={</span><span class="s3">'class'</span><span class="s1">: </span><span class="s3">'item-card__title bg-is-new'</span><span class="s1">})</span>
+    <span class="s0">if </span><span class="s1">(tituloBNA):</span>
+        <span class="s1">print(tituloBNA.text)</span>
+        <span class="s1">print(tituloBNA[</span><span class="s3">'href'</span><span class="s1">])  </span><span class="s2"># link noticia</span>
+    <span class="s2"># subtitulo</span>
+    <span class="s1">subtituloBNA = li.find(</span><span class="s3">'div'</span><span class="s0">, </span><span class="s1">attrs={</span><span class="s3">'class'</span><span class="s1">: </span><span class="s3">'font-size-0875 mb-1 mb-0-html-bind ng-binding ng-scope'</span><span class="s1">})</span>
+    <span class="s0">if </span><span class="s1">(subtituloBNA):</span>
+        <span class="s1">print(subtituloBNA.text)</span>
+
+
+
+</pre>
+</body>
+</html>
