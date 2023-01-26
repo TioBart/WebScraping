@@ -5,6 +5,8 @@ import getpass4
 from easygui import passwordbox
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
+import openpyxl
 
 # Configurações
 options = webdriver.ChromeOptions()
@@ -31,7 +33,7 @@ driver.find_element('xpath', '//*[@id="login"]/div/div[1]/div/div[1]/form/div[2]
 # 'd-block' ; li class
 
 import time
-time.sleep(5)
+time.sleep(6)
 
 #Dowloand_HTML = input('dowloand HTML? (Y or N): ')
 html = driver.page_source
@@ -48,11 +50,24 @@ for li in lis:
     tituloBNA = li.find('a', attrs={'class': 'item-card__title bg-is-new'})
     if (tituloBNA):
         print(tituloBNA.text)
-        print(tituloBNA['href'])  # link noticia
     # subtitulo
     subtituloBNA = li.find('div', attrs={'class': 'font-size-0875 mb-1 mb-0-html-bind ng-binding ng-scope'})
     if (subtituloBNA):
         print(subtituloBNA.text)
+
+#teletime
+
+#HTML
+teletime = requests.get("https://teletime.com.br/")
+TELEconteudo = teletime.content
+#Conteudo
+TELEsite = BeautifulSoup(TELEconteudo, 'html.parser')
+TELEnews = TELEsite.find('div', attrs={'class': 'td_block_wrap td_block_big_grid_2 tdi_9 td-grid-style-1 td-hover-1 td-big-grids td-pb-border-top td_block_template_12'})
+
+print(TELEnews.text)
+
+
+
 
 
 
